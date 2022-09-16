@@ -62,10 +62,10 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
     
     - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always()
-        with:
-          report_paths: junit.xml
+      uses: mikepenz/action-junit-report@v3
+      if: always()
+      with:
+        report_paths: junit.xml
     
   build:
     name: Build & Deploy Image
