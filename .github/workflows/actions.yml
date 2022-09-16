@@ -34,7 +34,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x, 16.x]
+        node-version: [12.x, 14.x, 16.x]
     name: Tests
     needs:
       - repository_scan
@@ -48,7 +48,7 @@ jobs:
       run: npm ci
 
     - name: Lint
-      run: eslint . --ext .js,.jsx,.ts,.tsx --color -o lint_report.xml -f junit
+      run: npm run lint
 
     - name: Unit Tests
       run: npm run test
