@@ -67,9 +67,9 @@ jobs:
     
   build:
     name: Build & Deploy Image
-    needs: 
-      - tests
-      - sonarcloud
+    # needs: 
+    #   - tests
+    #   - sonarcloud
     runs-on: ubuntu-latest
     permissions: 
       contents: read # for actions/checkout to fetch code
