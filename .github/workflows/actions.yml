@@ -22,7 +22,6 @@ jobs:
         ignore-unfixed: true
         format: 'sarif'
         output: 'trivy-repo-results.sarif'
-        severity: 'CRITICAL,HIGH,MEDIUM'
 
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
@@ -101,7 +100,6 @@ jobs:
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
-        severity: 'CRITICAL,HIGH,MEDIUM'
         vuln-type: 'library'
 
     - name: Upload Trivy Docker Scan results to GitHub Security tab
