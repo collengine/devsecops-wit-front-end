@@ -97,7 +97,10 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
       run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} . 
 
-    - name: Docker vulnerability scanner
+    - name: Docker vulnerability scanner 
+      env:
+        ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
         image-ref: '$ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}'
