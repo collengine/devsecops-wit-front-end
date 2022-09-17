@@ -4,66 +4,66 @@ on: [push]
 
 jobs:
   
-  repository_scan:
-    name: Repository scan
-    runs-on: ubuntu-latest
-    permissions: 
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # for github/codeql-action/upload-sarif to get the Action run status 
-    steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
+  # repository_scan:
+  #   name: Repository scan
+  #   runs-on: ubuntu-latest
+  #   permissions: 
+  #     contents: read # for actions/checkout to fetch code
+  #     security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+  #     actions: read # for github/codeql-action/upload-sarif to get the Action run status 
+  #   steps:
+  #   - name: Checkout Repo
+  #     uses: actions/checkout@v3
 
-    - name: Trivy Repo vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        ignore-unfixed: true
-        format: 'sarif'
-        output: 'trivy-repo-results.sarif'
-        severity: 'CRITICAL'
+  #   - name: Trivy Repo vulnerability scanner
+  #     uses: aquasecurity/trivy-action@master
+  #     with:
+  #       scan-type: 'fs'
+  #       ignore-unfixed: true
+  #       format: 'sarif'
+  #       output: 'trivy-repo-results.sarif'
+  #       severity: 'CRITICAL'
 
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
-      if: always()
-      with:
-        sarif_file: 'trivy-repo-results.sarif'
-        category: repo-results
+  #   - name: Upload Trivy scan results to GitHub Security tab
+  #     uses: github/codeql-action/upload-sarif@v2
+  #     if: always()
+  #     with:
+  #       sarif_file: 'trivy-repo-results.sarif'
+  #       category: repo-results
 
-  tests:
-    name: Tests
-    needs:
-      - repository_scan
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
+  # tests:
+  #   name: Tests
+  #   needs:
+  #     - repository_scan
+  #   runs-on: ubuntu-latest
+  #   permissions: write-all
+  #   steps:
+  #   - name: Checkout Repo
+  #     uses: actions/checkout@v3
     
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+  #   - uses: actions/setup-node@v2
+  #     with:
+  #       node-version: '14'
 
-    - name: Install Dependencies
-      run: npm install
+  #   - name: Install Dependencies
+  #     run: npm install
 
-    - name: Lint
-      run: npm run lint
+  #   - name: Lint
+  #     run: npm run lint
 
-  sonarcloud:
-    name: Sonarcloud Scan
-    needs:
-      - repository_scan
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
+  # sonarcloud:
+  #   name: Sonarcloud Scan
+  #   needs:
+  #     - repository_scan
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout Repo
+  #     uses: actions/checkout@v3
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}  
+  #   - name: SonarCloud Scan
+  #     uses: SonarSource/sonarcloud-github-action@master
+  #     env:
+  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}  
     
   build:
     name: Build & Deploy Image
@@ -85,25 +85,19 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: us-east-2
 
     - name: Login to Ecr Repository
       id: login-to-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build Docker Image
-      env:
-        ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
-      run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} . 
+      run: docker build -t 957907570595.dkr.ecr.us-east-2.amazonaws.com/front-end:${{ github.sha }} 
 
     - name: Docker vulnerability scanner 
-      env:
-        ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
-        image-ref: $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+        image-ref: '957907570595.dkr.ecr.us-east-2.amazonaws.com/front-end:${{ github.sha }}'
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
@@ -117,8 +111,5 @@ jobs:
         category: docker-results
 
     - name: Deploy image to Ecr Repository
-      env:
-        ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
       run: |
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
+        docker push 957907570595.dkr.ecr.us-east-2.amazonaws.com/front-end:${{ github.sha }}
