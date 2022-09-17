@@ -57,6 +57,9 @@ jobs:
       - repository_scan
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
