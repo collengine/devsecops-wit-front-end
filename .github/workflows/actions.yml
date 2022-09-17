@@ -53,9 +53,9 @@ jobs:
       run: npm run lint
 
     - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
 
     # - name: SonarCloud Analysis        
     #   run: mvn sonar:sonar -Dsonar.projectKey=devsecops-wit-frontend -Dsonar.organization=devops-wit -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
