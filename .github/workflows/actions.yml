@@ -53,6 +53,8 @@ jobs:
 
   sonarcloud:
     name: Sonarcloud Scan
+    needs:
+      - repository_scan
     runs-on: ubuntu-latest
     steps:
     - name: SonarCloud Scan
