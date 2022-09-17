@@ -118,4 +118,4 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-to-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.FRONTEND_ECR_REPOSITORY }}
       run: |
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }} . 
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.sha }}
