@@ -92,12 +92,12 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build Docker Image
-      run: docker build -t {{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }} .
+      run: docker build -t ${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }} .
 
     - name: Docker vulnerability scanner 
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
       with:
-        image-ref: '{{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}'
+        image-ref: '${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}'
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
@@ -112,4 +112,4 @@ jobs:
 
     - name: Deploy image to Ecr Repository
       run: |
-        docker push {{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}
+        docker push ${{ secrets.FRONTEND_ECR_REPOSITORY }}:${{ github.sha }}
