@@ -92,7 +92,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build Docker Image
-      run: docker build -t 957907570595.dkr.ecr.us-east-2.amazonaws.com/front-end:${{ github.sha }} 
+      run: docker build -t 957907570595.dkr.ecr.us-east-2.amazonaws.com/front-end:${{ github.sha }}  .
 
     - name: Docker vulnerability scanner 
       uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
