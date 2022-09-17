@@ -102,6 +102,7 @@ jobs:
         template: '@/contrib/sarif.tpl'
         output: 'trivy-docker-results.sarif'
         severity: 'CRITICAL'
+        vuln-type: 'library'
 
     - name: Upload Trivy Docker Scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
